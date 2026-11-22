@@ -1,0 +1,71 @@
+name: radio-colaborativa
+
+x-servicio-python: &servicio-python
+  env_file: .env
+  depends_on:
+    redis:
+      condition: service_healthy
+  networks:
+    - radio-network
+  restart: unless-stopped
+
+services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    expose:
+      - "6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - radio-network
+    restart: unless-stopped
+
+  music-catalog-service:
+    <<: *servicio-python
+    build:
+      context: .
+      dockerfile: services/music-catalog-service/Dockerfile
+    image: radio-colaborativa/music-catalog-service:0.1.0
+    ports:
+      - "8001:8001"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/salud', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  room-queue-service:
+    <<: *servicio-python
+    build:
+      context: .
+      dockerfile: services/room-queue-service/Dockerfile
+    image: radio-colaborativa/room-queue-service:0.1.0
+    ports:
+      - "8002:8002"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8002/salud', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  realtime-sync-service:
+    <<: *servicio-python
+    build:
+      context: .
+      dockerfile: services/realtime-sync-service/Dockerfile
+    image: radio-colaborativa/realtime-sync-service:0.1.0
+    ports:
+      - "8003:8003"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8003/salud', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  radio-network:
+    name: radio-network
