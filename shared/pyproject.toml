@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "radio-comun"
+version = "0.1.0"
+description = "Utilidades compartidas por los microservicios de radio-colaborativa."
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.115,<1.0",
+    "python-decouple>=3.8",
+    "redis>=5.0.1,<7",
+]
+
+[tool.setuptools.packages.find]
+include = ["radio_comun*"]
