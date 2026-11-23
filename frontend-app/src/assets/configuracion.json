@@ -1,0 +1,5 @@
+{
+  "urlMusicCatalog": "http://localhost:8001",
+  "urlRoomQueue": "http://localhost:8002",
+  "urlRealtimeSync": "ws://localhost:8003"
+}

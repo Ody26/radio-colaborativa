@@ -66,6 +66,25 @@ services:
       timeout: 5s
       retries: 3
 
+  frontend-app:
+    build:
+      context: ./frontend-app
+    image: radio-colaborativa/frontend-app:0.1.0
+    environment:
+      URL_PUBLICA_MUSIC_CATALOG: ${URL_PUBLICA_MUSIC_CATALOG:-http://localhost:8001}
+      URL_PUBLICA_ROOM_QUEUE: ${URL_PUBLICA_ROOM_QUEUE:-http://localhost:8002}
+      URL_PUBLICA_REALTIME_SYNC: ${URL_PUBLICA_REALTIME_SYNC:-ws://localhost:8003}
+    ports:
+      - "8100:8100"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8100/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - radio-network
+    restart: unless-stopped
+
 networks:
   radio-network:
     name: radio-network
