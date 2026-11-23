@@ -5,8 +5,10 @@ Referencia común para el backend y el frontend. Cualquier cambio de un contrato
 ## Convenciones
 
 - Fechas en ISO 8601 UTC (`2026-11-22T23:00:00Z`), salvo los campos de reloj de reproducción, que van en milisegundos desde época (`*_ms`).
-- Errores con el formato de FastAPI: `{"detail": "Mensaje en español para el usuario"}`.
+- Todos los errores, incluidos los de validación, responden `{"detail": "Mensaje en español para el usuario"}` con un único texto listo para mostrar.
 - Autenticación con `Authorization: Bearer <token>` en HTTP. El token solo es válido para la sala con la que se emitió.
+- Claims del token: `sub` (id del participante), `id_sala`, `apodo`, `iat` y `exp` (4 h). Al cambiar el apodo se emite un token nuevo.
+- Textos de usuario (nombre de sala, apodo, chat): sin etiquetas HTML ni caracteres de control. Apodo de 3 a 20 caracteres, único en la sala sin distinguir mayúsculas; nombre de sala de 3 a 40.
 - Endpoints `/internal/*`: solo entre servicios, con cabecera `X-Clave-Interna: <CLAVE_SERVICIOS_INTERNOS>`.
 
 | Código | Uso |
@@ -30,15 +32,15 @@ EstadoReproduccion { estado: "reproduciendo" | "en_espera", elemento: ElementoCo
 MensajeChat        { id_mensaje, participante: Participante, texto, enviado_en }
 ```
 
-`duracion` siempre en segundos y corresponde a lo que el proveedor permite reproducir. `codigo` tiene 6 caracteres de `ABCDEFGHJKMNPQRSTUVWXYZ23456789`.
+`duracion` siempre en segundos y corresponde a lo que el proveedor permite reproducir. `codigo` tiene 6 caracteres de `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (sin `I`, `L`, `O`, `0` ni `1` para evitar confusiones); las rutas lo aceptan sin distinguir mayúsculas.
 
 ## room-queue-service (:8002)
 
 | Método | Ruta | Cuerpo | Respuesta | Auth |
 |---|---|---|---|---|
-| POST | `/api/salas` | `{ nombre? }` | 201 `SalaPublica` | No |
+| POST | `/api/salas` | `{ nombre? }` (cuerpo opcional) | 201 `SalaPublica` | No |
 | GET | `/api/salas/{codigo}` | — | `SalaPublica` | No |
-| POST | `/api/salas/{codigo}/unirse` | `{ apodo? }` | 201 `SesionParticipante` | No |
+| POST | `/api/salas/{codigo}/unirse` | `{ apodo? }` (cuerpo opcional) | 201 `SesionParticipante` | No |
 | PATCH | `/api/salas/{codigo}/participantes/yo` | `{ apodo }` | `SesionParticipante` con token nuevo | Sí |
 | GET | `/api/salas/{codigo}/participantes` | — | `Participante[]` | Sí |
 | GET | `/api/salas/{codigo}/cola` | — | `ElementoCola[]` ordenada | Sí |

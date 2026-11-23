@@ -9,6 +9,7 @@ description = "Utilidades compartidas por los microservicios de radio-colaborati
 requires-python = ">=3.10"
 dependencies = [
     "fastapi>=0.115,<1.0",
+    "pyjwt>=2.9,<3",
     "python-decouple>=3.8",
     "redis>=5.0.1,<7",
 ]

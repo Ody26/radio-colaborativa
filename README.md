@@ -43,6 +43,18 @@ npm start
 
 Queda en http://localhost:4200. Las URLs de los servicios se leen de `src/assets/configuracion.json`; en el contenedor, ese archivo se genera al arrancar a partir de las variables `URL_PUBLICA_*`, por lo que la misma imagen sirve para local y para la nube.
 
+## Pruebas
+
+Las pruebas de los servicios usan un Redis simulado, por lo que no necesitan Docker. Desde la raíz del repositorio:
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements-dev.txt -r services/room-queue-service/requirements.txt
+cd services/room-queue-service
+python -m pytest              # usa el pytest del entorno virtual
+```
+
 ## Estructura
 
 ```text
