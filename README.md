@@ -29,7 +29,19 @@ Antes de levantar el sistema, reemplaza en `.env` los valores de `JWT_SECRET_KEY
 python -c "import secrets; print(secrets.token_urlsafe(48))"
 ```
 
-Cada servicio expone `GET /salud` y su documentación interactiva en `/docs` (por ejemplo, http://localhost:8002/docs).
+La aplicación queda disponible en http://localhost:8100. Cada servicio expone `GET /salud` y su documentación interactiva en `/docs` (por ejemplo, http://localhost:8002/docs).
+
+### Frontend en modo desarrollo
+
+Con los servicios levantados en Docker, el frontend puede ejecutarse con recarga automática:
+
+```bash
+cd frontend-app
+npm install
+npm start
+```
+
+Queda en http://localhost:4200. Las URLs de los servicios se leen de `src/assets/configuracion.json`; en el contenedor, ese archivo se genera al arrancar a partir de las variables `URL_PUBLICA_*`, por lo que la misma imagen sirve para local y para la nube.
 
 ## Estructura
 
@@ -37,6 +49,7 @@ Cada servicio expone `GET /salud` y su documentación interactiva en `/docs` (po
 .
 ├── docker-compose.yml
 ├── docs/contratos.md
+├── frontend-app/                # Ionic + Angular (standalone), servido por Nginx
 ├── shared/radio_comun/          # configuración, cliente Redis y salud
 └── services/
     ├── music-catalog-service/

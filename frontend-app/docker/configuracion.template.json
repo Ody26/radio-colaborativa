@@ -1,0 +1,5 @@
+{
+  "urlMusicCatalog": "${URL_PUBLICA_MUSIC_CATALOG}",
+  "urlRoomQueue": "${URL_PUBLICA_ROOM_QUEUE}",
+  "urlRealtimeSync": "${URL_PUBLICA_REALTIME_SYNC}"
+}
