@@ -21,6 +21,13 @@ class ConflictoNegocio(ErrorDominio):
 class ServicioNoDisponible(ErrorDominio):
     codigo_http = status.HTTP_503_SERVICE_UNAVAILABLE
 
+class LimiteFrecuenciaExcedido(ErrorDominio):
+    codigo_http = status.HTTP_429_TOO_MANY_REQUESTS
+
+    def __init__(self, reintentar_en: int) -> None:
+        super().__init__(f"Vas muy rápido. Espera {reintentar_en} s antes de volver a intentarlo.")
+        self.reintentar_en = reintentar_en
+
 def _mensaje_validacion(error: dict) -> str:
     campo = error["loc"][-1] if error.get("loc") else "dato"
     match error.get("type"):
@@ -34,7 +41,10 @@ def _mensaje_validacion(error: dict) -> str:
 def registrar_manejadores_errores(app: FastAPI) -> None:
     @app.exception_handler(ErrorDominio)
     async def manejar_error_dominio(_: Request, error: ErrorDominio) -> JSONResponse:
-        return JSONResponse(status_code=error.codigo_http, content={"detail": error.detalle})
+        encabezados = {}
+        if isinstance(error, LimiteFrecuenciaExcedido):
+            encabezados["Retry-After"] = str(error.reintentar_en)
+        return JSONResponse(status_code=error.codigo_http, content={"detail": error.detalle}, headers=encabezados)
 
     @app.exception_handler(RequestValidationError)
     async def manejar_error_validacion(_: Request, error: RequestValidationError) -> JSONResponse:
