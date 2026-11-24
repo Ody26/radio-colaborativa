@@ -1,0 +1,102 @@
+ion-toolbar {
+  --background: var(--ion-background-color);
+}
+
+.unirse {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.cargando {
+  display: flex;
+  justify-content: center;
+  padding-top: 80px;
+}
+
+.sala {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  h1 {
+    margin: 2px 0 4px;
+    font-size: 24px;
+  }
+}
+
+.invitacion {
+  color: var(--rc-menta);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.detalle {
+  color: var(--rc-texto-sobre-tinta);
+  font-size: 13px;
+}
+
+.formulario,
+.no-encontrada {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  h1,
+  h2 {
+    margin: 0;
+    font-size: 22px;
+  }
+}
+
+.no-encontrada {
+  align-items: center;
+  text-align: center;
+}
+
+@media (min-width: 600px) {
+  .sala app-vinilo {
+    --rc-vinilo-tamano: 96px;
+  }
+}
+
+@media (min-width: 900px) {
+  .unirse {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 24px;
+    max-width: 920px;
+    padding-top: 10vh;
+  }
+
+  .sala {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    h1 {
+      font-size: 32px;
+    }
+
+    app-vinilo {
+      --rc-vinilo-tamano: 140px;
+    }
+  }
+
+  .formulario {
+    justify-content: center;
+    padding: 28px;
+  }
+
+  .cargando,
+  .no-encontrada {
+    grid-column: 1 / -1;
+  }
+
+  .no-encontrada {
+    max-width: 440px;
+    justify-self: center;
+  }
+}
