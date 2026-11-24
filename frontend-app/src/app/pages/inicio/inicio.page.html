@@ -1,12 +1,69 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Radio Colaborativa</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true">
+  <main class="rc-pagina inicio">
+    <span class="mancha mancha-menta" aria-hidden="true"></span>
+    <span class="mancha mancha-coral" aria-hidden="true"></span>
 
-<ion-content class="ion-padding">
-  <section id="contenedor">
-    <h1>Radio Colaborativa</h1>
-    <p>Escucha música en grupo y en tiempo real.</p>
-  </section>
+    <header class="marca">
+      <span class="logo rc-display">radio<span>colab</span></span>
+      <span class="rc-pastilla">Sin registro</span>
+    </header>
+
+    <div class="portada">
+      <div class="ilustracion">
+        <app-vinilo [tamano]="190" />
+      </div>
+
+      <section class="presentacion">
+        <h1>Tu playlist,<br />entre todos.</h1>
+        <p>Propón canciones, vota las que más te gustan y escuchen juntos al mismo segundo.</p>
+        <ul class="ventajas">
+          <li class="rc-pastilla">Sin cuentas ni contraseñas</li>
+          <li class="rc-pastilla">Todos votan la cola</li>
+          <li class="rc-pastilla">Suena igual para todos</li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="rc-tarjeta acciones">
+      <form [formGroup]="formularioCrear" (ngSubmit)="crearSala()">
+        <ion-input
+          class="rc-campo"
+          formControlName="nombre"
+          label="Nombre de la sala (opcional)"
+          labelPlacement="stacked"
+          fill="outline"
+          placeholder="Previa del viernes"
+          [maxlength]="40"
+          errorText="El nombre debe tener entre 3 y 40 caracteres"
+        ></ion-input>
+        <ion-button class="rc-boton" type="submit" expand="block" [disabled]="creando()">
+          @if (creando()) {
+          <ion-spinner name="dots"></ion-spinner>
+          } @else {
+          <ion-icon slot="start" name="add"></ion-icon>
+          Crear mi sala }
+        </ion-button>
+      </form>
+
+      <p class="separador">o únete con un código</p>
+
+      <form class="fila-codigo" [formGroup]="formularioUnirse" (ngSubmit)="irASala()">
+        <ion-input
+          class="rc-campo rc-codigo"
+          formControlName="codigo"
+          aria-label="Código de la sala"
+          fill="outline"
+          placeholder="K7M4QX"
+          [maxlength]="6"
+          autocapitalize="characters"
+          errorText="Son 6 letras o números"
+        ></ion-input>
+        <ion-button class="rc-boton" type="submit" color="secondary">Entrar</ion-button>
+      </form>
+
+      @if (error(); as mensaje) {
+      <p class="rc-error" role="alert">{{ mensaje }}</p>
+      }
+    </section>
+  </main>
 </ion-content>
