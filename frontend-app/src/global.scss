@@ -25,13 +25,91 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
+html {
+  color-scheme: light;
+}
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+h1,
+h2,
+h3,
+.rc-display {
+  font-family: var(--rc-fuente-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+ion-button {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.rc-pagina {
+  position: relative;
+  max-width: 480px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: calc(24px + var(--ion-safe-area-top, 0px)) 20px calc(32px + var(--ion-safe-area-bottom, 0px));
+  box-sizing: border-box;
+}
+
+@media (min-width: 600px) {
+  .rc-pagina {
+    max-width: 600px;
+    padding-inline: 32px;
+  }
+}
+
+.rc-tarjeta {
+  padding: 16px;
+  border-radius: var(--rc-radio-grande);
+  background: var(--rc-tarjeta);
+  box-shadow: 0 10px 30px rgba(107, 61, 245, 0.1);
+}
+
+.rc-tarjeta-oscura {
+  padding: 18px;
+  border-radius: var(--rc-radio-grande);
+  background: var(--ion-color-dark);
+  color: #ffffff;
+}
+
+.rc-pastilla {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--rc-borde);
+  background: var(--rc-tarjeta);
+  color: var(--ion-color-medium);
+  font-size: 13px;
+}
+
+.rc-campo {
+  --background: var(--ion-background-color);
+  --border-color: var(--rc-borde);
+  --border-radius: 16px;
+  --border-width: 2px;
+  --highlight-color-focused: var(--ion-color-primary);
+}
+
+.rc-codigo {
+  font-family: var(--rc-fuente-display);
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+ion-button.rc-boton {
+  --border-radius: var(--rc-radio);
+  min-height: 56px;
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.rc-error {
+  margin: 0;
+  color: var(--ion-color-danger);
+  font-size: 14px;
+}
