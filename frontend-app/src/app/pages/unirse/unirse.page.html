@@ -1,0 +1,59 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" text="Inicio"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <main class="rc-pagina unirse">
+    @if (cargando()) {
+    <div class="cargando">
+      <ion-spinner name="crescent" aria-label="Buscando la sala"></ion-spinner>
+    </div>
+    } @else if (sala(); as sala) {
+    <section class="rc-tarjeta-oscura sala">
+      <app-vinilo [tamano]="72" />
+      <div>
+        <span class="invitacion">Te invitaron a</span>
+        <h1>{{ sala.nombre }}</h1>
+        <span class="detalle">
+          Sala <strong class="rc-codigo">{{ sala.codigo }}</strong> · {{ sala.participantes_conectados }} conectados
+        </span>
+      </div>
+    </section>
+
+    <form class="rc-tarjeta formulario" [formGroup]="formulario" (ngSubmit)="unirse()">
+      <h2>¿Cómo te llamamos?</h2>
+      <ion-input
+        class="rc-campo"
+        formControlName="apodo"
+        label="Tu apodo (opcional)"
+        labelPlacement="stacked"
+        fill="outline"
+        [maxlength]="20"
+        helperText="Si lo dejas vacío te inventamos uno"
+        errorText="El apodo debe tener entre 3 y 20 caracteres"
+      ></ion-input>
+
+      @if (error(); as mensaje) {
+      <p class="rc-error" role="alert">{{ mensaje }}</p>
+      }
+
+      <ion-button class="rc-boton" type="submit" expand="block" [disabled]="uniendose()">
+        @if (uniendose()) {
+        <ion-spinner name="dots"></ion-spinner>
+        } @else { Entrar a la sala }
+      </ion-button>
+    </form>
+    } @else {
+    <section class="rc-tarjeta no-encontrada">
+      <app-vinilo [tamano]="96" color="var(--rc-borde)" />
+      <h1>Esta sala ya no está</h1>
+      <p class="rc-error" role="alert">{{ error() }}</p>
+      <ion-button class="rc-boton" routerLink="/" expand="block">Volver al inicio</ion-button>
+    </section>
+    }
+  </main>
+</ion-content>
