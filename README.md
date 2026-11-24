@@ -29,7 +29,11 @@ Antes de levantar el sistema, reemplaza en `.env` los valores de `JWT_SECRET_KEY
 python -c "import secrets; print(secrets.token_urlsafe(48))"
 ```
 
-La aplicación queda disponible en http://localhost:8100. Cada servicio expone `GET /salud` y su documentación interactiva en `/docs` (por ejemplo, http://localhost:8002/docs).
+La aplicación queda disponible en http://localhost:8100.
+
+Para usar Jamendo como respaldo del catálogo, crea una aplicación gratuita en https://devportal.jamendo.com y pon su *Client ID* en `JAMENDO_CLIENT_ID`. Sin ese valor, el catálogo usa solo Deezer.
+
+Cada servicio expone `GET /salud` y su documentación interactiva en `/docs` (por ejemplo, http://localhost:8002/docs).
 
 ### Frontend en modo desarrollo
 

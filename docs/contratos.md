@@ -17,6 +17,7 @@ Referencia común para el backend y el frontend. Cualquier cambio de un contrato
 | 404 | Sala o elemento inexistente |
 | 409 | Conflicto con una regla de negocio (sala llena, apodo repetido, canción duplicada, límites de cola) |
 | 422 | Datos de entrada inválidos |
+| 403 | Llamada a `/internal/*` sin la clave interna correcta |
 | 429 | Límite de frecuencia excedido; incluye cabecera `Retry-After` en segundos |
 | 503 | Dependencia externa no disponible |
 
@@ -58,7 +59,11 @@ Al agregar una canción solo se envía `proveedor` e `id_pista`; los metadatos l
 | GET | `/api/catalogo/buscar?q=&limite=20` | `{ proveedor_usado, resultados: Pista[] }` | Sí |
 | GET | `/internal/pistas/{proveedor}/{id_pista}` | `Pista` | Interna |
 
-Si Deezer falla o no responde a tiempo, la búsqueda se repite en Jamendo y `proveedor_usado` lo indica.
+- `q` de 2 a 100 caracteres; `limite` de 1 a 25. Requiere token de cualquier sala y cuenta para el límite de búsquedas.
+- Orden de proveedores: Deezer y, si falla, no responde a tiempo o no encuentra nada, Jamendo. `proveedor_usado` indica cuál respondió. Si ninguno responde: 503.
+- Jamendo solo se usa si `JAMENDO_CLIENT_ID` tiene valor.
+- Deezer solo permite reproducir previews de 30 s, por eso su `duracion` nunca supera 30. Las canciones sin audio disponible se omiten.
+- Los resultados se guardan en caché `TTL_CACHE_CATALOGO_SEGUNDOS`. Las URL de audio de Deezer caducan con el tiempo: antes de reproducir una pista, realtime-sync debe pedirla de nuevo a `/internal/pistas`.
 
 ## realtime-sync-service (:8003)
 
@@ -116,7 +121,8 @@ Un único Redis compartido. Cada clave pertenece al servicio que la escribe; los
 | `sala:{id_sala}:reproduccion` | Hash | realtime-sync |
 | `sala:{id_sala}:chat` | List (últimos 100) | realtime-sync |
 | `sala:{id_sala}:conexiones` | Hash `id_conexion → id_participante` | realtime-sync |
-| `catalogo:busqueda:{proveedor}:{consulta}` | String JSON con TTL | music-catalog |
+| `catalogo:busqueda:{proveedor}:{limite}:{consulta}` | String JSON con TTL | music-catalog |
+| `catalogo:pista:{proveedor}:{id_pista}` | String JSON con TTL | music-catalog |
 | `limite:{accion}:{id_sala}:{id_participante}` | Sorted Set (ventana deslizante) | cada servicio |
 
 Puntaje compuesto de la cola: `puntaje × 1 000 000 − secuencia`, para que en empate gane la canción agregada primero.
