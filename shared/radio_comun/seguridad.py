@@ -1,10 +1,11 @@
+import secrets
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 from typing import Annotated
 import jwt
 from decouple import config
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, Header, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, ConfigDict, ValidationError
 
@@ -90,3 +91,8 @@ async def obtener_claims(
         raise no_autorizado() from None
 
 ClaimsActuales = Annotated[ClaimsToken, Depends(obtener_claims)]
+
+def verificar_clave_interna(x_clave_interna: Annotated[str | None, Header()] = None) -> None:
+    esperada = config("CLAVE_SERVICIOS_INTERNOS", default="")
+    if not esperada or not x_clave_interna or not secrets.compare_digest(x_clave_interna, esperada):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Acceso restringido a servicios internos")
